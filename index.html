@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPPT for Solar Energy Systems using Arduino - Colorado State University</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #005c00; /* CSU Green */
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .csu-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .csu-logo a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white; /* Ensures text stays white */
+        }
+        
+        .csu-logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: opacity 0.2s;
+        }
+        
+        .csu-logo img:hover {
+            opacity: 0.9;
+        }
+        
+        .project-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .project-year {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: #b39a44; /* Gold */
+            padding: 0.5rem 0;
+            text-align: center;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: #005c00;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #003300;
+        }
+        
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+            min-height: 65vh;
+        }
+        
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        h1 {
+            color: #005c00;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: #005c00;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+        
+        .team-photo {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .team-info {
+            flex: 1;
+            min-width: 300px;
+            padding-left: 1rem;
+        }
+        
+        .team-info h3 {
+            color: #005c00;
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-info p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Team Section Styles - Updated to match reference */
+        .team-member-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .team-member {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .team-member:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .team-member-content {
+            flex: 1;
+        }
+        
+        .team-member h2 {
+            color: #005c00;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .team-member h3 {
+            color: #b39a44;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .team-member p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        /* Documents List */
+        .documents-list {
+            list-style-type: none;
+            margin: 2rem 0;
+        }
+        
+        .documents-list li {
+            background: #f8f9fa;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #005c00;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .documents-list li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .documents-list a {
+            color: #005c00;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .documents-list a:hover {
+            text-decoration: underline;
+        }
+        
+        .document-icon {
+            font-size: 1.2rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #005c00;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            text-decoration: underline;
+        }
+        
+        .csu-footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .csu-footer p {
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+        
+        .csu-footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .csu-footer a:hover p {
+            text-decoration: underline;
+        }
+        
+        /* Timeline Section - Updated to match reference */
+        .timeline-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+        
+        .timeline-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .timeline-link {
+            display: block;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            color: #005c00;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #005c00;
+        }
+        
+        .timeline-link:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #e8f5e8;
+        }
+        
+        /* Media Section Styles */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .video-container {
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .video-caption {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .project-title {
+                font-size: 1.5rem;
+            }
+            
+            .project-year {
+                font-size: 1rem;
+            }
+            
+            .team-container {
+                flex-direction: column;
+            }
+            
+            .team-info {
+                padding-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .team-member {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .team-member img {
+                margin-right: 0;
+                margin-bottom: 1rem;
+                width: 120px;
+                height: 120px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .media-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Page Content (initially hidden) */
+        .page-content {
+            display: none;
+        }
+        
+        .page-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="csu-logo">
+                <a href="https://www.colostate.edu/">
+                    <img src="images/logo.png" alt="CSU Logo">
+                    <span>COLORADO STATE UNIVERSITY</span>
+                </a>
+            </div>
+            <div class="project-title">MPPT for Solar Energy Systems using Arduino</div>
+            <div class="project-year">2025-2026</div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+            <li><a href="#" class="nav-link" data-page="team">Team</a></li>
+            <li><a href="#" class="nav-link" data-page="timeline">Timeline</a></li>
+            <li><a href="#" class="nav-link" data-page="documents">Documents</a></li>
+            <li><a href="#" class="nav-link" data-page="media">Media</a></li>
+            <li><a href="#" class="nav-link" data-page="acknowledgements">Acknowledgements</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Home Page -->
+        <section id="home" class="page-content active">
+            <div class="card">
+                <h1>The Team</h1>
+                <div class="team-container">
+                    <img src="images/faisal.jpeg" alt="Faisal Alnaqbi" class="team-photo">
+                    <div class="team-info">
+                        <h3>Students</h3>
+                        <p>Faisal Alnaqbi</p>
+                        
+                        <h3>Graduate Advisor</h3>
+                        <p>Sowmiya Priya</p>
+                        
+                        <h3>Faculty Advisor</h3>
+                        <p>Notaros Olivera</p>
+                        
+                        <p><strong>Meets online</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h1>Project Background</h1>
+                <p>Solar photovoltaic systems suffer from efficiency losses due to changing sunlight and load conditions. This project simulates a complete PV system in Proteus, implements multiple MPPT algorithms, and compares their performance to identify the most efficient solution. It also demonstrates a low-cost Arduino-based MPPT model for educational use.</p>
+                
+                <h2>Objectives</h2>
+                <ul>
+                    <li>Develop a complete PV system simulation with Arduino-based MPPT control.</li>
+                    <li>Implement P&O, INC, FOCV, FLC, and VSS-P&O MPPT controllers.</li>
+                    <li>Evaluate controller performance under varying irradiance, temperature, and shading conditions.</li>
+                    <li>Compare tracking efficiency, convergence speed, stability, robustness, and computational complexity.</li>
+                    <li>Demonstrate practical MPPT implementation using a simplified Arduino-based instructional model.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Team Page - Updated to match reference style -->
+        <section id="team" class="page-content">
+            <div class="team-member-section">
+                <h1>Our Team</h1>
+                
+                <!-- Team Member -->
+                <div class="team-member">
+                    <img src="images/faisal.jpeg" alt="Faisal Alnaqbi">
+                    <div class="team-member-content">
+                        <h2>Faisal Alnaqbi</h2>
+                        <h3>Computer Engineer</h3>
+                        <p>Faisal is a computer engineer with expertise in embedded systems development and renewable energy applications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Page - Updated to match reference style -->
+        <section id="timeline" class="page-content">
+            <div class="timeline-section">
+                <h1>Timeline and Deliverables</h1>
+                
+                <div class="timeline-links">
+                    <a href="documents/WorkPlan.xlsx" class="timeline-link">Work Plan</a>
+                    <a href="documents/Budget.xlsx" class="timeline-link">Budget</a>
+                    <a href="documents/FMEA Table.xlsx" class="timeline-link">FMEA Table</a>
+                    <a href="documents/Risk Table.xlsx" class="timeline-link">Risk Table</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents Page -->
+        <section id="documents" class="page-content">
+            <div class="card">
+                <h1>Project Documents</h1>
+                <ul class="documents-list">
+                    <li><a href="documents/WorkPlan.xlsx"><span class="document-icon">📄</span> Work Plan</a></li>
+                    <li><a href="documents/Budget.xlsx"><span class="document-icon">💰</span> Budget</a></li>
+                    <li><a href="documents/FMEA Table.xlsx"><span class="document-icon">📊</span> FMEA Table</a></li>
+                    <li><a href="documents/Risk Table.xlsx"><span class="document-icon">⚠️</span> Risk Analysis</a></li>
+                    <li><a href="documents/Proposal_-_updated.docx"><span class="document-icon">📝</span> Project Proposal</a></li>
+                </ul>
+                <p class="release-note">All documents approved for public release.</p>
+            </div>
+        </section>
+
+        <!-- Media Page -->
+        <section id="media" class="page-content">
+            <div class="card">
+                <h1>Project Media</h1>
+                <p>Explore our project through these videos showcasing our work, demonstrations, and progress.</p>
+                
+                <div class="media-grid">                  
+                    <div class="video-container">
+                        <video controls controlsList="nodownload" poster="images/video3-thumbnail.jpg">
+                            <source src="videos/vid3.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-caption">Video 1: configured Proteus and Arduino without including any controller</div>
+                    </div>
+                    
+                    <div class="video-container">
+                        <video controls controlsList="nodownload" poster="images/video1-thumbnail.jpg">
+                            <source src="videos/vid1.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-caption">Video 2: implementation of P&O controller. Two different simulations were made: in the presence of light and in the absence of light</div>
+                    </div>
+                    
+                    <!-- Video 3 -->
+                    <div class="video-container">
+                        <video controls controlsList="nodownload" poster="images/video2-thumbnail.jpg">
+                            <source src="videos/vid2.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-caption">Video 3: implementation of INC controller. Two different simulations were made: in the presence of light and in the absence of light</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="acknowledgements" class="page-content">
+            <div class="card">
+                <h1>Acknowledgements</h1>
+                <p>We would like to thank our Faculty and Industry Advisors for their guidance and support.</p>
+                <p>We also thank the CSU ECE department and any sponsors who contributed to our project.</p>
+                <p>We appreciate all the efforts and time provided by everyone involved in making this project successful.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://www.engr.colostate.edu/ece/" class="footer-link">
+                    <span></span> ELECTRICAL AND COMPUTER ENGINEERING
+                </a>
+                <a href="https://www.engr.colostate.edu/ece/senior-design/?ay=2025" class="footer-link">
+                    <span></span> Other Senior Design Projects
+                </a>
+                <a href="https://give.colostate.edu/campaigns/40250/donations/new?amt=250" class="footer-link">
+                    <span></span> Support our program
+                </a>
+            </div>
+            
+            <div class="csu-footer">
+                <a href="https://www.colostate.edu/">
+                    <p>COLORADO STATE UNIVERSITY</p>
+                </a>
+                <a href="https://www.colostate.edu/">
+                    <img src="images/logo.png" style="width: 80px; margin-top: 10px;">
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageContents = document.querySelectorAll('.page-content');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and contents
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    pageContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show the corresponding content
+                    const pageId = this.getAttribute('data-page');
+                    document.getElementById(pageId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
